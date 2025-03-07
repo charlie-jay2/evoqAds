@@ -12,22 +12,18 @@ const dbName = "EvoVisionDB"; // Change this to your database name
 const evoqAdsCollection = "evoqAds";
 const evoqBoardCollection = "evoqBoard";
 
-app.get('/evoqAds', async (req, res) => {
+// Fetches EvoqAds to check if they are still present
+async function fetchEvoqAds() {
     try {
         await client.connect();
         const db = client.db(dbName);
-
-        // Fetch evoqAds data
         const evoqAdsData = await db.collection(evoqAdsCollection).findOne({ _id: "global" });
-        const ads = evoqAdsData ? evoqAdsData.ads : [];
-
-        // Send the ads data in the response
-        res.json({ ads: ads });
+        return evoqAdsData ? evoqAdsData.ads : [];
     } catch (error) {
-        console.error("Error fetching evoqAds:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        console.error("Error fetching EvoqAds:", error);
+        return [];
     }
-});
+}
 
 app.get('/evoqBoard/:gameID', async (req, res) => {
     const { gameID } = req.params;
@@ -35,19 +31,27 @@ app.get('/evoqBoard/:gameID', async (req, res) => {
         await client.connect();
         const db = client.db(dbName);
 
-        // Fetch or create evoqBoard data
+        // Fetch the EvoqAds to check if they are still present
+        const evoqAds = await fetchEvoqAds();
+        const evoqAdsPresent = evoqAds.length > 0;
+
+        // Count the number of EvoVision models (assuming they are stored in a collection or a structure)
+        // For the sake of this example, I'll set it to a fixed number as we don't have actual game data here.
+        const evoVisionsCount = 3; // Example count, replace with actual count logic
+
+        // Check if board data already exists for this game
         let boardData = await db.collection(evoqBoardCollection).findOne({ gameID: gameID });
         if (!boardData) {
+            // If no existing data, create a new entry
             boardData = {
                 gameID: gameID,
                 userAds: [],
                 enabled: true,
-                visibility: true,
-                createdAt: new Date(),
                 suspended: false,
                 blacklisted: false,
-                suspensionEnd: null,
-                blacklistEnd: null
+                evoqAdsPresent: evoqAdsPresent,
+                evoVisionsCount: evoVisionsCount,
+                createdAt: new Date(),
             };
             await db.collection(evoqBoardCollection).insertOne(boardData); // Insert new schema
         }
