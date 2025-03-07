@@ -30,6 +30,23 @@ app.get('/evoqAds', async (req, res) => {
     }
 });
 
+// Route to get all whitelisted users
+app.get('/evoqWhitelist', async (req, res) => {
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(whitelistCollectionName);
+
+        const whitelist = await collection.find({}).toArray(); // Fetch all users in the whitelist
+        if (whitelist.length === 0) return res.status(404).json({ error: "No whitelisted users found" });
+
+        res.json({ users: whitelist });
+    } catch (error) {
+        console.error("Error fetching whitelist data:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 // Route to add a user to the whitelist
 app.post('/evoqWhitelist', async (req, res) => {
     const { userId } = req.body; // Expecting userId to be passed in the request body
@@ -54,27 +71,6 @@ app.post('/evoqWhitelist', async (req, res) => {
         res.status(201).json({ message: "User added to whitelist" });
     } catch (error) {
         console.error("Error adding user to whitelist:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-});
-
-// Route to check if a user is whitelisted
-app.get('/evoqWhitelist/:userId', async (req, res) => {
-    const { userId } = req.params;
-
-    try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(whitelistCollectionName);
-
-        const user = await collection.findOne({ userId });
-        if (!user) {
-            return res.status(404).json({ error: "User not whitelisted" });
-        }
-
-        res.json({ message: "User is whitelisted" });
-    } catch (error) {
-        console.error("Error fetching whitelist data:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
