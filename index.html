@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evoq Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+      html,
+      body {
+        height: 100%;
+        background-color: #000000;
+        color: #fff;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+      }
+      .container {
+        max-width: 600px;
+        margin: auto;
+        flex-grow: 1; /* Pushes the footer to the bottom */
+      }
+      img {
+        width: 200px;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+      p {
+        font-size: 18px;
+        margin-bottom: 20px;
+        opacity: 0.8;
+      }
+      .links {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .link {
+        display: block;
+        background: #ffffff;
+        color: #000000;
+        padding: 12px;
+        padding-left: 30px;
+        padding-right: 30px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 18px;
+        transition: 0.6s ease-in-out;
+      }
+      .link:hover {
+        background: #474747;
+        color: white;
+      }
+      footer {
+        background-color: #333;
+        color: #fff;
+        padding: 15px;
+        font-size: 14px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="evoq_logo_white.png" alt="Evoq Logo" />
+      <h1>Welcome to Evoq</h1>
+      <p>Below is our access points.</p>
+      <div class="links">
+        <a class="link" href="/evovision.mp4" target="_blank">
+          Watch EvoVision Teaser Video
+        </a>
+      </div>
+    </div>
+    <footer>Evoq © Copyright 2025</footer>
+  </body>
+</html>

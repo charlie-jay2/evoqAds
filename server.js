@@ -15,6 +15,11 @@ const collectionName = "evoqAds";
 // Serve static files from the current directory
 app.use(express.static(__dirname));
 
+// Route to serve the home page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Route to get EvoqAds data
 app.get('/evoqAds', async (req, res) => {
     try {
