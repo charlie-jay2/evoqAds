@@ -1,26 +1,26 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
 
+// MongoDB Connection
 const mongoUri = process.env.MONGO_URI;
 const client = new MongoClient(mongoUri);
 const dbName = "EvoVisionDB"; // Change this to your database name
 const collectionName = "evoqAds";
 
-// Serve static files from the current directory
+// Serve static files
 app.use(express.static(__dirname));
 
-// Route to serve the home page
+// Routes
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Route to get EvoqAds data
 app.get('/evoqAds', async (req, res) => {
     try {
         await client.connect();
@@ -37,11 +37,14 @@ app.get('/evoqAds', async (req, res) => {
     }
 });
 
-// Route to serve the video file
+// Serve video file
 app.get('/evovision.mp4', (req, res) => {
-    const videoPath = path.join(__dirname, 'evovision.mp4');
-    res.sendFile(videoPath);
+    res.sendFile(path.join(__dirname, 'evovision.mp4'));
 });
+
+// Import and use the whitelist API
+const evoqWhitelist = require('evoqWhitelist.js');
+app.use('/whitelist', evoqWhitelist);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
